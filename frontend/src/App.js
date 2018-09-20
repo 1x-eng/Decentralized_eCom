@@ -1,8 +1,14 @@
 import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
+import { Grid, Row, Col, Jumbotron, Accordion, Panel, Tabs, Tab, FormGroup, InputGroup, Button, FormControl, Well, ControlLabel,  Media, Checkbox, Label } from 'react-bootstrap';
+import { supplierContract, customerContract, web3 } from "./EthereumSetup";
 
 class App extends Component {
+
+  constructor(props){
+    super(props);
+  }
   render() {
     return (
       <div className="App">
