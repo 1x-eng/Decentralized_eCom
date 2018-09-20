@@ -5,13 +5,15 @@
  * @modify date 2018-09-20 16:50:12
  * @desc Customer in our E-Com platform.
 */
+pragma solidity ^0.4.17;
+// We have to specify what version of compiler this code will compile with
 
 contract Customer {
 
   /* Events */
   event OrderRaised(uint idOrder);
 
-  struct Customer {
+  struct AvailableCustomer {
     uint idCustomer;
     bytes32 customerName;
   }
@@ -29,13 +31,13 @@ contract Customer {
   uint numberOfItemsReceived;
 
   // Mappings 
-  mapping (uint => Customer) customers;
+  mapping (uint => AvailableCustomer) customers;
   mapping (uint => Orderlog) orderLogs;
 
   /* Constructor */
-  function Customer() public {
+  constructor() public {
       /* For the case of demo, adding a customer in constructor. You can take this idea and extend the contract to contain addCustomer section and hence maintain customerDB in the Blockchain! */
-      customers[0] = Customer(1, "John Snow");
+      customers[0] = AvailableCustomer(1, "John Snow");
   }
 
   /* TRANSACTIONS */
@@ -46,7 +48,7 @@ contract Customer {
   }
 
   function recieveItem(uint idOrder) public {
-      numberOfItemsRecieved++;
+      numberOfItemsReceived++;
       orderLogs[idOrder].status = true;
   }
 

@@ -51,7 +51,7 @@ contract Supplier {
   /* GETTERS */
   function getItem(uint idItem) view public returns (bytes32, uint){
     /*returns itemName and its price*/
-    return (items[idItem].itemName, itemName[idItem].price);
+    return (items[idItem].itemName, items[idItem].price);
   }
 
   function getStatus(uint idOrder) view public returns (bool) {
