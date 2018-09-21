@@ -3,22 +3,33 @@ import logo from './logo.svg';
 import './App.css';
 import { Grid, Row, Col, Jumbotron, Accordion, Panel, Tabs, Tab, FormGroup, InputGroup, Button, FormControl, Well, ControlLabel,  Media, Checkbox, Label } from 'react-bootstrap';
 import { supplierContract, customerContract, web3 } from "./EthereumSetup";
+import CustomersClient from './Customers';
+import SuppliersClient from './Suppliers';
 
 class App extends Component {
 
   constructor(props){
     super(props);
+    this.state = {
+    }
   }
+
+
   render() {
     return (
       <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
+        <Jumbotron>
+          <h1>Decentralized E-Commerce!</h1>
+          <p>Powered by Ethereum!</p>
+        </Jumbotron>
+        {/* STEPS:
+          1. Add items for sale by supplier.
+          2. Display them in customer section.
+          3. Purchase an Item from customer section.
+          4. Display purchaseOrder in Supplier section.
+          5. Complete order in Supplier section.
+          6. Show order completed in Customer section.
+        */}
       </div>
     );
   }
