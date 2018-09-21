@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
-import { Grid, Row, Col, Jumbotron, Accordion, Panel, Tabs, Tab, FormGroup, InputGroup, Button, FormControl, Well, ControlLabel,  Media, Checkbox, Label } from 'react-bootstrap';
+import { Grid, Row, Col, Jumbotron } from 'react-bootstrap';
 import { supplierContract, customerContract, web3 } from "./EthereumSetup";
 import CustomersClient from './Customers';
 import SuppliersClient from './Suppliers';
@@ -30,6 +30,16 @@ class App extends Component {
           5. Complete order in Supplier section.
           6. Show order completed in Customer section.
         */}
+        <Grid>
+            <Row className="show-grid">
+                <Col xs={12} md={6}>
+                  <CustomersClient />>
+                </Col>
+                <Col xs={12} md={6}>
+                  <SuppliersClient />>
+                </Col>
+            </Row>
+        </Grid>
       </div>
     );
   }
