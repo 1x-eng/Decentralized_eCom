@@ -7,7 +7,7 @@
  */
 
 import React, { Component } from 'react';
-import { supplierContract, web3 } from "./EthereumSetup";
+import { supplierContract, customerContract, web3 } from "./EthereumSetup";
 import { Grid, Row, Col, Panel, Tabs, Tab, FormGroup, InputGroup, Button, FormControl, Table } from 'react-bootstrap';
 
 
@@ -17,7 +17,8 @@ class SuppliersClient extends Component {
         super(props);
         this.state = {
             supplierContract_blockchainRecordedItemIds: [],
-            supplierContract_blockchainRecordedPurchaseOrderServices: []
+            supplierContract_blockchainRecordedPurchaseOrderServices: [],
+            customerContract_blockchainRecordedPurchaseOrderIds: []
         }
 
         /* event listeners */
@@ -25,7 +26,13 @@ class SuppliersClient extends Component {
             fromBlock: 0,
             toBlock: 'latest'
         });
+
         this.supplierContract_processAnOrderEvents = supplierContract.ProcessAnOrder({}, {
+            fromBlock: 0,
+            toBlock: 'latest'
+        });
+
+        this.customerContract_orderRaisedEvents = customerContract.OrderRaised({}, {
             fromBlock: 0,
             toBlock: 'latest'
         });
@@ -33,6 +40,7 @@ class SuppliersClient extends Component {
         /* Getters */
         this.supplierContract_getTotalNumberOfAvailableItems = this.supplierContract_getTotalNumberOfAvailableItems.bind(this);
         this.supplierContract_getTotalNumberOfOrdersProcessed = this.supplierContract_getTotalNumberOfOrdersProcessed.bind(this);
+        this.customerContract_getOrderDetails = this.customerContract_getOrderDetails.bind(this);
 
         /* transactions */
         this.supplierContract_addItem = this.supplierContract_addItem.bind(this);
@@ -40,6 +48,10 @@ class SuppliersClient extends Component {
 
         this.triggerSupplierContractEventListeners = this.triggerSupplierContractEventListeners.bind(this);
         this.addNewItemToMarketBySupplier = this.addNewItemToMarketBySupplier.bind(this);
+    }
+
+    componentDidMount(){
+        this.triggerSupplierContractEventListeners();
     }
 
     triggerSupplierContractEventListeners() {
@@ -71,6 +83,19 @@ class SuppliersClient extends Component {
                 });
             }
         })
+
+        this.customerContract_orderRaisedEvents.watch((err, eventLogs) => {
+            if (err) {
+                console.error('[Event Listener Error]', err);
+            } else {
+                console.log('[Event Logs]', eventLogs);
+                this.setState({
+                    customerContract_blockchainRecordedPurchaseOrderIds: [...this.state.customerContract_blockchainRecordedPurchaseOrderIds,
+                        parseInt(eventLogs.args.idOrder.toString())
+                    ]
+                });
+            }
+        });
     }
 
     supplierContract_getTotalNumberOfAvailableItems() {
@@ -78,6 +103,9 @@ class SuppliersClient extends Component {
     }
     supplierContract_getTotalNumberOfOrdersProcessed() {
         return supplierContract.getTotalNumberOfOrdersProcessed.call();
+    }
+    customerContract_getOrderDetails(idOrder) {
+        return customerContract.getOrderDetails.call(idOrder);
     }
 
     supplierContract_addItem(itemName, price) {
@@ -117,7 +145,7 @@ class SuppliersClient extends Component {
             <div>
                 <Grid>
                     <Row className="show-grid">
-                        <Col xs={12} md={12}>
+                        <Col xs={12} md={6}>
                         <Panel>
                             <Panel.Heading>Supplier Section</Panel.Heading>
                             <Panel.Body>
@@ -160,7 +188,7 @@ class SuppliersClient extends Component {
                                         <tbody>
                                             {this.state.customerContract_blockchainRecordedPurchaseOrderIds.map(orderId => {
                                             const orderDetails = this.customerContract_getOrderDetails(orderId);
-                                            return (<tr onClick={this.supplierContract_processOrder}>
+                                            return (<tr onClick={() => this.supplierContract_processOrder(orderId, 1)}>
                                                 <td>
                                                 {orderId}
                                                 </td>
@@ -181,16 +209,6 @@ class SuppliersClient extends Component {
                                         )}
                                         </tbody>
                                         </Table>
-                                </Tab>
-                                <Tab eventKey={3} title="Meat Processor">
-
-                                    <FormGroup>
-                                        <ul>
-                                        {this.state.processorContract_blockchainRecordedProcessorIds.map(processorId => <li>
-                                        Processor with ID {processorId} is recorded as available in the blockchain!
-                                        </li>)}
-                                        </ul>
-                                    </FormGroup>
                                 </Tab>
                                 </Tabs>
                             </Panel.Body>

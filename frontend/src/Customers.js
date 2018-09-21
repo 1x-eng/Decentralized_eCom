@@ -46,6 +46,10 @@ class CustomersClient extends Component {
         this.purchaseThisItem = this.purchaseThisItem.bind(this);
     }
 
+    componentDidMount(){
+        this.triggerCustomerContractEventListeners();
+    }
+
     triggerCustomerContractEventListeners() {
 
         this.supplierContract_itemAddedEvents.watch((err, eventLogs) => {

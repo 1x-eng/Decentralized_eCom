@@ -10,8 +10,8 @@ import Web3 from 'web3';
 
 const web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8484"));
 
-let supplierAddress = '0xb7fec3c4c0777a9ffbd997cc53c921383c83d29e';
-let customerAddress = '0x0286b46be0ee227119d9f82179b7f3629c195489';
+let supplierAddress = '0xb94a8603b1ea2e886137c1b18fdf03b187b1ed13';
+let customerAddress = '0xa8a1fe32f50e5a563dedc2862d836596202ff99d';
 
 let supplierABI = [{
     "anonymous": false,

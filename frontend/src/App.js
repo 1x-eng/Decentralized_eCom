@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
 import { Grid, Row, Col, Jumbotron } from 'react-bootstrap';
-import { supplierContract, customerContract, web3 } from "./EthereumSetup";
 import CustomersClient from './Customers';
 import SuppliersClient from './Suppliers';
 
@@ -12,7 +10,6 @@ class App extends Component {
     super(props);
     this.state = {}
   }
-
 
   render() {
     return (
@@ -32,10 +29,10 @@ class App extends Component {
         <Grid>
             <Row className="show-grid">
                 <Col xs={12} md={6}>
-                  <CustomersClient />>
+                  <CustomersClient />
                 </Col>
                 <Col xs={12} md={6}>
-                  <SuppliersClient />>
+                  <SuppliersClient />
                 </Col>
             </Row>
         </Grid>
