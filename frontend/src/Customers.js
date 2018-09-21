@@ -6,9 +6,9 @@
  * @desc Client side ocde for connecting Customers to Ethereum backend!
  */
 
-import React, { Component } from 'react;
+import React, { Component } from 'react';
 import { supplierContract, customerContract, web3 } from "./EthereumSetup";
-import { Grid, Row, Col, Panel, Tabs, Tab, FormGroup, InputGroup, Button, FormControl, Well, ControlLabel,  Media, Checkbox, Label } from 'react-bootstrap';
+import { Grid, Row, Col, Panel, Tabs, Tab, Table } from 'react-bootstrap';
 
 class CustomersClient extends Component {
 

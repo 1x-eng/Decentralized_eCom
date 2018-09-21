@@ -8,7 +8,7 @@
 
 import React, { Component } from 'react';
 import { supplierContract, web3 } from "./EthereumSetup";
-import { Grid, Row, Col, Panel, Tabs, Tab, FormGroup, InputGroup, Button, FormControl, Well, ControlLabel,  Media, Checkbox, Label } from 'react-bootstrap';
+import { Grid, Row, Col, Panel, Tabs, Tab, FormGroup, InputGroup, Button, FormControl, Table } from 'react-bootstrap';
 
 
 class SuppliersClient extends Component {
