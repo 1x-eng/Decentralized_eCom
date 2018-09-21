@@ -31,8 +31,6 @@ class SuppliersClient extends Component {
         });
 
         /* Getters */
-        this.supplierContract_getItem = this.supplierContract_getItem.bind(this);
-        this.supplierContract_getStatus = this.supplierContract_getStatus.bind(this);
         this.supplierContract_getTotalNumberOfAvailableItems = this.supplierContract_getTotalNumberOfAvailableItems.bind(this);
         this.supplierContract_getTotalNumberOfOrdersProcessed = this.supplierContract_getTotalNumberOfOrdersProcessed.bind(this);
 
@@ -74,12 +72,6 @@ class SuppliersClient extends Component {
         })
     }
 
-    supplierContract_getItem(idItem) {
-        return supplierContract.getItem.call(idItem);
-    }
-    supplierContract_getStatus(idOrder) {
-        return supplierContract.getStatus.call(idOrder);
-    }
     supplierContract_getTotalNumberOfAvailableItems() {
         return supplierContract.getTotalNumberOfAvailableItems.call();
     }
@@ -165,7 +157,7 @@ class SuppliersClient extends Component {
                                                 {orderId}
                                                 </td>
                                                 <td>
-                                                'XYZ Customer'
+                                                'John Snow'
                                                 </td>
                                                 <td>
                                                 {orderDetails.itemName}
