@@ -39,6 +39,7 @@ class SuppliersClient extends Component {
         this.supplierContract_processOrder = this.supplierContract_processOrder.bind(this);
 
         this.triggerSupplierContractEventListeners = this.triggerSupplierContractEventListeners.bind(this);
+        this.addNewItemToMarketBySupplier = this.addNewItemToMarketBySupplier.bind(this);
     }
 
     triggerSupplierContractEventListeners() {
@@ -104,6 +105,13 @@ class SuppliersClient extends Component {
         });
     }
 
+    addNewItemToMarketBySupplier(e){
+        e.preventDefault();
+        const itemName = e.target.elements.itemName.value;
+        const price = e.target.elements.price.value;
+        this.supplierContract_addItem(itemName, price);
+    }
+
     render(){
         return (
             <div>
@@ -133,7 +141,7 @@ class SuppliersClient extends Component {
                                         </FormGroup>
 
                                         <FormGroup>
-                                        <Button bsStyle="primary" label="Login" id="loginButton" type="submit" active>Add to Market</Button>                                  
+                                        <Button bsStyle="primary" label="Login" id="loginButton" type="submit" active>Add to Market</Button>
                                         </FormGroup>
                                     </form>
                                 </Tab>

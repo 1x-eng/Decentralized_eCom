@@ -40,8 +40,10 @@ class CustomersClient extends Component {
         /* transactions */
         this.customerContract_purchaseItem = this.customerContract_purchaseItem.bind(this);
         this.customerContract_recieveItem = this.customerContract_recieveItem.bind(this);
+        this.supplierContract_processOrder = this.supplierContract_processOrder.bind(this);
 
         this.triggerCustomerContractEventListeners = this.triggerCustomerContractEventListeners.bind(this);
+        this.purchaseThisItem = this.purchaseThisItem.bind(this);
     }
 
     triggerCustomerContractEventListeners() {
@@ -116,6 +118,24 @@ class CustomersClient extends Component {
         });
     }
 
+    supplierContract_processOrder(idOrder, idCustomer) {
+        supplierContract.addItem(idOrder, idCustomer, {
+            from: web3.eth.accounts[0],
+            gas: 200000
+        }, (err, results) => {
+            if (err) {
+                console.error('[Supplier Contract] Error during procesing an order', err);
+            } else {
+                console.log('[Supplier Contract] - order successfully processed by supplier', results.toString());
+            }
+        });
+    }
+
+    purchaseThisItem(itemDetails){
+        this.customerContract_purchaseItem(itemDetails.itemName, itemDetails.quantity);
+    }
+
+
     render(){
         return (
             <div>
@@ -126,63 +146,63 @@ class CustomersClient extends Component {
                                 <Panel.Heading>Customer Section</Panel.Heading>
                                 <Panel.Body>
                                     <Tabs defaultActiveKey={1} id="uncontrolled-tab-example">
-                                    <Tab eventKey={1} title="Market">
-                                        {this.state.supplierContract_blockchainRecordedItemIds.map(itemId => {
-                                            let itemDetails = this.supplierContract_getItem(itemId);
-                                            return (
-                                                <div>
-                                                    <Panel onClick={() => this.purchaseThisItem({
-                                                        'id': itemId,
-                                                        'itemName': web3.toAscii(String(itemDetails).split(',')[0]),
-                                                        'price': parseInt(String(itemDetails).split(',')[1]),
-                                                        'quantity': 1
-                                                    })}>
-                                                        <Panel.Heading>HOT SALE! <small>Click to purchase!</small></Panel.Heading>
-                                                        <Panel.Body>
-                                                            {web3.toAscii(String(itemDetails).split(',')[0])} - ${parseInt(String(itemDetails).split(',')[1])}
-                                                        </Panel.Body>
-                                                    </Panel>
-                                                </div>
-                                            );
-                                        })}
-                                    </Tab>
-                                    <Tab eventKey={2} title="Order(s)">
-                                        <h4>Order details</h4>
-                                        <Table striped bordered condensed hover>
-                                            <thead>
-                                                <tr>
-                                                <th>Order ID</th>
-                                                <th>Customer Name</th>
-                                                <th>Item Name</th>
-                                                <th>Quantity</th>
-                                                <th>Order Completed</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                {this.state.customerContract_blockchainRecordedPurchaseOrderIds.map(orderId => {
-                                                const orderDetails = this.customerContract_getOrderDetails(orderId);
-                                                return (<tr onClick={this.supplierContract_processOrder}>
-                                                    <td>
-                                                    {orderId}
-                                                    </td>
-                                                    <td>
-                                                    'John Snow'
-                                                    </td>
-                                                    <td>
-                                                    {orderDetails.itemName}
-                                                    </td>
-                                                    <td>
-                                                    {orderDetails.quantity}
-                                                    </td>
-                                                    <td>
-                                                    {orderDetails.status}
-                                                    </td>
-                                                </tr>);
-                                                }
-                                            )}
-                                            </tbody>
+                                        <Tab eventKey={1} title="Market">
+                                            {this.state.supplierContract_blockchainRecordedItemIds.map(itemId => {
+                                                let itemDetails = this.supplierContract_getItem(itemId);
+                                                return (
+                                                    <div>
+                                                        <Panel onClick={() => this.purchaseThisItem({
+                                                            'id': itemId,
+                                                            'itemName': web3.toAscii(String(itemDetails).split(',')[0]),
+                                                            'price': parseInt(String(itemDetails).split(',')[1]),
+                                                            'quantity': 1
+                                                        })}>
+                                                            <Panel.Heading>HOT SALE! <small>Click to purchase!</small></Panel.Heading>
+                                                            <Panel.Body>
+                                                                {web3.toAscii(String(itemDetails).split(',')[0])} @ ${parseInt(String(itemDetails).split(',')[1])}
+                                                            </Panel.Body>
+                                                        </Panel>
+                                                    </div>
+                                                );
+                                            })}
+                                        </Tab>
+                                        <Tab eventKey={2} title="Order(s)">
+                                            <h4>Order details</h4>
+                                            <Table striped bordered condensed hover>
+                                                <thead>
+                                                    <tr>
+                                                    <th>Order ID</th>
+                                                    <th>Customer Name</th>
+                                                    <th>Item Name</th>
+                                                    <th>Quantity</th>
+                                                    <th>Order Completed</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {this.state.customerContract_blockchainRecordedPurchaseOrderIds.map(orderId => {
+                                                    const orderDetails = this.customerContract_getOrderDetails(orderId);
+                                                    return (<tr onClick={() => this.supplierContract_processOrder(orderId, 1)}>
+                                                        <td>
+                                                        {orderId}
+                                                        </td>
+                                                        <td>
+                                                        'John Snow'
+                                                        </td>
+                                                        <td>
+                                                        {web3.toAscii(String(orderDetails).split(',')[0])}
+                                                        </td>
+                                                        <td>
+                                                        {parseInt(String(orderDetails).split(',')[1])}
+                                                        </td>
+                                                        <td>
+                                                        {String(orderDetails).split(',')[2]}
+                                                        </td>
+                                                    </tr>);
+                                                    }
+                                                )}
+                                                </tbody>
                                             </Table>
-                                    </Tab>
+                                        </Tab>
                                     </Tabs>
                                 </Panel.Body>
                             </Panel>
