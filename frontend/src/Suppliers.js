@@ -9,6 +9,7 @@
 import React, { Component } from 'react';
 import { supplierContract, customerContract, web3 } from "./EthereumSetup";
 import { Grid, Row, Col, Panel, Tabs, Tab, FormGroup, InputGroup, Button, FormControl, Table } from 'react-bootstrap';
+import './App.css';
 
 
 class SuppliersClient extends Component {
@@ -32,7 +33,7 @@ class SuppliersClient extends Component {
             toBlock: 'latest'
         });
 
-        this.customerContract_orderRaisedEvents = customerContract.OrderRaised({}, {
+        this.customerContract_orderRaisedOrUpdatedEvents = customerContract.OrderRaisedOrUpdated({}, {
             fromBlock: 0,
             toBlock: 'latest'
         });
@@ -45,6 +46,7 @@ class SuppliersClient extends Component {
         /* transactions */
         this.supplierContract_addItem = this.supplierContract_addItem.bind(this);
         this.supplierContract_processOrder = this.supplierContract_processOrder.bind(this);
+        this.customerContract_recieveItem = this.customerContract_recieveItem.bind(this);
 
         this.triggerSupplierContractEventListeners = this.triggerSupplierContractEventListeners.bind(this);
         this.addNewItemToMarketBySupplier = this.addNewItemToMarketBySupplier.bind(this);
@@ -84,7 +86,7 @@ class SuppliersClient extends Component {
             }
         })
 
-        this.customerContract_orderRaisedEvents.watch((err, eventLogs) => {
+        this.customerContract_orderRaisedOrUpdatedEvents.watch((err, eventLogs) => {
             if (err) {
                 console.error('[Event Listener Error]', err);
             } else {
@@ -121,7 +123,7 @@ class SuppliersClient extends Component {
         });
     }
     supplierContract_processOrder(idOrder, idCustomer) {
-        supplierContract.addItem(idOrder, idCustomer, {
+        supplierContract.processOrder(idOrder, idCustomer, {
             from: web3.eth.accounts[0],
             gas: 200000
         }, (err, results) => {
@@ -129,6 +131,19 @@ class SuppliersClient extends Component {
                 console.error('[Supplier Contract] Error during procesing an order', err);
             } else {
                 console.log('[Supplier Contract] - order successfully processed by supplier', results.toString());
+            }
+        });
+    }
+
+    customerContract_recieveItem(idOrder) {
+        customerContract.recieveItem(idOrder, {
+            from: web3.eth.accounts[0],
+            gas: 200000
+        }, (err, results) => {
+            if (err) {
+                console.error('[Customer Contract] Error during recieving a processed item', err);
+            } else {
+                console.log('[Customer Contract] - Item successfully recieved by Customer', results.toString());
             }
         });
     }
@@ -149,68 +164,96 @@ class SuppliersClient extends Component {
                         <Panel>
                             <Panel.Heading>Supplier Section</Panel.Heading>
                             <Panel.Body>
-                            <Tabs defaultActiveKey={1} id="uncontrolled-tab-example">
-                                <Tab eventKey={1} title="Add Items to Market">
-                                    <form onSubmit={this.addNewItemToMarketBySupplier}>
-                                        <FormGroup>
-                                        <InputGroup>
-                                            <InputGroup.Button>
-                                            <Button>Item Name</Button>
-                                            </InputGroup.Button>
-                                            <FormControl ref="itemName" name="itemName" placeholder="eg. Toy / Shirt / CoffeeMug etc.," type="text"/>
-                                        </InputGroup>
+                                <Tabs defaultActiveKey={1} id="uncontrolled-tab-example">
+                                    <Tab eventKey={1} title="Add Items to Market">
+                                    <br/> <br/>
+                                        <form onSubmit={this.addNewItemToMarketBySupplier}>
+                                            <FormGroup>
+                                            <InputGroup>
+                                                <InputGroup.Button>
+                                                <Button>Item Name </Button>
+                                                </InputGroup.Button>
+                                                <FormControl ref="itemName" name="itemName" placeholder="eg. Toy / Shirt / CoffeeMug etc.," type="text"/>
+                                            </InputGroup>
 
-                                        <InputGroup>
-                                            <InputGroup.Button>
-                                            <Button>Price</Button>
-                                            </InputGroup.Button>
-                                            <FormControl ref="price" name="price" placeholder="Price per unit in USD" type="number"/>
-                                        </InputGroup>
-                                        </FormGroup>
+                                            <InputGroup>
+                                                <InputGroup.Button>
+                                                <Button>Price <small>(USD)</small></Button>
+                                                </InputGroup.Button>
+                                                <FormControl ref="price" name="price" placeholder="Price per unit in USD" type="number"/>
+                                            </InputGroup>
+                                            </FormGroup>
 
-                                        <FormGroup>
-                                        <Button bsStyle="primary" label="Login" id="loginButton" type="submit" active>Add to Market</Button>
-                                        </FormGroup>
-                                    </form>
-                                </Tab>
-                                <Tab eventKey={2} title="Process Order(s)">
-                                    <h4>Order details</h4>
-                                    <Table striped bordered condensed hover>
-                                        <thead>
-                                            <tr>
-                                            <th>Order ID</th>
-                                            <th>Customer Name</th>
-                                            <th>Item Name</th>
-                                            <th>Quantity</th>
-                                            <th>Order Completed</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {this.state.customerContract_blockchainRecordedPurchaseOrderIds.map(orderId => {
-                                            const orderDetails = this.customerContract_getOrderDetails(orderId);
-                                            return (<tr onClick={() => this.supplierContract_processOrder(orderId, 1)}>
-                                                <td>
-                                                {orderId}
-                                                </td>
-                                                <td>
-                                                'John Snow'
-                                                </td>
-                                                <td>
-                                                {orderDetails.itemName}
-                                                </td>
-                                                <td>
-                                                {orderDetails.quantity}
-                                                </td>
-                                                <td>
-                                                {orderDetails.status}
-                                                </td>
-                                            </tr>);
-                                            }
-                                        )}
-                                        </tbody>
-                                        </Table>
-                                </Tab>
-                                </Tabs>
+                                            <FormGroup>
+                                            <Button bsStyle="primary" label="Login" id="loginButton" type="submit" active>Add to Market</Button>
+                                            </FormGroup>
+                                        </form>
+                                    </Tab>
+                                    <Tab eventKey={2} title="Process Order(s)">
+                                        <h4>Order details</h4>
+                                        <Table striped bordered condensed hover>
+                                            <thead>
+                                                <tr>
+                                                <th>Order ID</th>
+                                                <th>Customer Name</th>
+                                                <th>Item Name</th>
+                                                <th>Quantity</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {this.state.customerContract_blockchainRecordedPurchaseOrderIds.map(orderId => {
+                                                const orderDetails = this.customerContract_getOrderDetails(orderId);
+                                                const orderedItemName = web3.toUtf8(String(orderDetails).split(',')[0]);
+                                                const orderedItemQuantity = parseInt(String(orderDetails).split(',')[1]);
+
+                                                return (<tr className="pointIt" onClick={() => this.supplierContract_processOrder(orderId, 1)}>
+                                                    <td>
+                                                    {orderId}
+                                                    </td>
+                                                    <td>
+                                                    John Snow
+                                                    </td>
+                                                    <td>
+                                                    {orderedItemName}
+                                                    </td>
+                                                    <td>
+                                                    {orderedItemQuantity}
+                                                    </td>
+                                                </tr>);
+                                                }
+                                            )}
+                                            </tbody>
+                                            </Table>
+
+                                            <h4>Pocessed Order(s)</h4>
+                                            <Table striped bordered condensed hover>
+                                                <thead>
+                                                    <tr>
+                                                    <th>Order ID</th>
+                                                    <th>Customer Name</th>
+                                                    <th>Order Completed</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {this.state.supplierContract_blockchainRecordedPurchaseOrderServices.map(po => {
+                                                        console.log(po);
+                                                    return (<tr>
+                                                        <td>
+                                                        {po.idOrder}
+                                                        </td>
+                                                        <td>
+                                                        John Snow
+                                                        </td>
+                                                        <td>
+                                                        {po.status === true ? 'Completed' : 'InProgress'}
+                                                        </td>
+                                                    </tr>);
+                                                    }
+                                                )}
+                                                </tbody>
+                                            </Table>
+                                    </Tab>
+                                    </Tabs>
                             </Panel.Body>
                         </Panel>
                         </Col>

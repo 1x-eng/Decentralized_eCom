@@ -9,6 +9,7 @@
 import React, { Component } from 'react';
 import { supplierContract, customerContract, web3 } from "./EthereumSetup";
 import { Grid, Row, Col, Panel, Tabs, Tab, Table } from 'react-bootstrap';
+import './App.css';
 
 class CustomersClient extends Component {
 
@@ -25,7 +26,7 @@ class CustomersClient extends Component {
             toBlock: 'latest'
         });
 
-        this.customerContract_orderRaisedEvents = customerContract.OrderRaised({}, {
+        this.customerContract_OrderRaisedOrUpdatedEvents = customerContract.OrderRaisedOrUpdated({}, {
             fromBlock: 0,
             toBlock: 'latest'
         });
@@ -65,7 +66,7 @@ class CustomersClient extends Component {
             }
         });
 
-        this.customerContract_orderRaisedEvents.watch((err, eventLogs) => {
+        this.customerContract_OrderRaisedOrUpdatedEvents.watch((err, eventLogs) => {
             if (err) {
                 console.error('[Event Listener Error]', err);
             } else {
@@ -157,13 +158,13 @@ class CustomersClient extends Component {
                                                     <div>
                                                         <Panel onClick={() => this.purchaseThisItem({
                                                             'id': itemId,
-                                                            'itemName': web3.toAscii(String(itemDetails).split(',')[0]),
+                                                            'itemName': web3.toUtf8(String(itemDetails).split(',')[0]),
                                                             'price': parseInt(String(itemDetails).split(',')[1]),
                                                             'quantity': 1
                                                         })}>
-                                                            <Panel.Heading>HOT SALE! <small>Click to purchase!</small></Panel.Heading>
+                                                            <Panel.Heading className="pointIt">HOT SALE! <small>Click to purchase!</small></Panel.Heading>
                                                             <Panel.Body>
-                                                                {web3.toAscii(String(itemDetails).split(',')[0])} @ ${parseInt(String(itemDetails).split(',')[1])}
+                                                                {web3.toUtf8(String(itemDetails).split(',')[0])} @ ${parseInt(String(itemDetails).split(',')[1])}
                                                             </Panel.Body>
                                                         </Panel>
                                                     </div>
@@ -176,7 +177,6 @@ class CustomersClient extends Component {
                                                 <thead>
                                                     <tr>
                                                     <th>Order ID</th>
-                                                    <th>Customer Name</th>
                                                     <th>Item Name</th>
                                                     <th>Quantity</th>
                                                     <th>Order Completed</th>
@@ -190,10 +190,7 @@ class CustomersClient extends Component {
                                                         {orderId}
                                                         </td>
                                                         <td>
-                                                        'John Snow'
-                                                        </td>
-                                                        <td>
-                                                        {web3.toAscii(String(orderDetails).split(',')[0])}
+                                                        {web3.toUtf8(String(orderDetails).split(',')[0])}
                                                         </td>
                                                         <td>
                                                         {parseInt(String(orderDetails).split(',')[1])}

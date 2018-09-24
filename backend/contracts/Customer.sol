@@ -11,7 +11,7 @@ pragma solidity ^0.4.17;
 contract Customer {
 
   /* Events */
-  event OrderRaised(uint idOrder);
+  event OrderRaisedOrUpdated(uint idOrder);
 
   struct AvailableCustomer {
     uint idCustomer;
@@ -44,12 +44,13 @@ contract Customer {
   function purchaseItem(bytes32 itemName, uint quantity) public {
     uint idOrder = numberOfItemsPurchased++;
     orderLogs[idOrder] = Orderlog(idOrder, 0, itemName, quantity, false);
-    emit OrderRaised(idOrder);
+    emit OrderRaisedOrUpdated(idOrder);
   }
 
   function recieveItem(uint idOrder) public {
       numberOfItemsReceived++;
       orderLogs[idOrder].status = true;
+      emit OrderRaisedOrUpdated(idOrder);
   }
 
   /* GETTERS */
