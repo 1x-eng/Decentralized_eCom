@@ -46,7 +46,6 @@ class CustomersClient extends Component {
         /* transactions */
         this.customerContract_purchaseItem = this.customerContract_purchaseItem.bind(this);
         this.customerContract_recieveItem = this.customerContract_recieveItem.bind(this);
-        this.supplierContract_processOrder = this.supplierContract_processOrder.bind(this);
 
         this.triggerCustomerContractEventListeners = this.triggerCustomerContractEventListeners.bind(this);
         this.purchaseThisItem = this.purchaseThisItem.bind(this);
@@ -139,19 +138,6 @@ class CustomersClient extends Component {
         });
     }
 
-    supplierContract_processOrder(idOrder, idCustomer) {
-        supplierContract.addItem(idOrder, idCustomer, {
-            from: web3.eth.accounts[0],
-            gas: 200000
-        }, (err, results) => {
-            if (err) {
-                console.error('[Supplier Contract] Error during procesing an order', err);
-            } else {
-                console.log('[Supplier Contract] - order successfully processed by supplier', results.toString());
-            }
-        });
-    }
-
     purchaseThisItem(itemDetails){
         this.customerContract_purchaseItem(itemDetails.itemName, itemDetails.quantity);
     }
@@ -199,23 +185,24 @@ class CustomersClient extends Component {
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    {this.state.customerContract_blockchainRecordedPurchaseOrderIds.map(orderId => {
-                                                    const orderDetails = this.customerContract_getOrderDetails(orderId);
+                                                    {
+                                                    [... new Set(this.state.customerContract_blockchainRecordedPurchaseOrderIds)].map(orderId => {
+                                                        const orderDetails = this.customerContract_getOrderDetails(orderId);
 
-                                                    return (<tr onClick={() => this.supplierContract_processOrder(orderId, 1)}>
-                                                        <td>
-                                                        {orderId}
-                                                        </td>
-                                                        <td>
-                                                        {web3.toUtf8(String(orderDetails).split(',')[0])}
-                                                        </td>
-                                                        <td>
-                                                        {parseInt(String(orderDetails).split(',')[1])}
-                                                        </td>
-                                                        <td>
-                                                        {String(orderDetails).split(',')[2]}
-                                                        </td>
-                                                    </tr>);
+                                                        return (<tr>
+                                                            <td>
+                                                            {orderId}
+                                                            </td>
+                                                            <td>
+                                                            {web3.toUtf8(String(orderDetails).split(',')[0])}
+                                                            </td>
+                                                            <td>
+                                                            {parseInt(String(orderDetails).split(',')[1])}
+                                                            </td>
+                                                            <td>
+                                                            {String(orderDetails).split(',')[2]}
+                                                            </td>
+                                                        </tr>);
                                                     }
                                                 )}
                                                 </tbody>

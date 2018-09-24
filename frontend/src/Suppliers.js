@@ -33,7 +33,7 @@ class SuppliersClient extends Component {
             toBlock: 'latest'
         });
 
-        this.customerContract_orderRaisedOrUpdatedEvents = customerContract.OrderRaisedOrUpdated({}, {
+        this.customerContract_orderRaisedEvents = customerContract.OrderRaisedOrUpdated({}, {
             fromBlock: 0,
             toBlock: 'latest'
         });
@@ -86,16 +86,18 @@ class SuppliersClient extends Component {
             }
         })
 
-        this.customerContract_orderRaisedOrUpdatedEvents.watch((err, eventLogs) => {
+        this.customerContract_orderRaisedEvents.watch((err, eventLogs) => {
             if (err) {
                 console.error('[Event Listener Error]', err);
             } else {
                 console.log('[Event Logs]', eventLogs);
-                this.setState({
-                    customerContract_blockchainRecordedPurchaseOrderIds: [...this.state.customerContract_blockchainRecordedPurchaseOrderIds,
-                        parseInt(eventLogs.args.idOrder.toString())
-                    ]
-                });
+                if (this.state.customerContract_blockchainRecordedPurchaseOrderIds.indexOf(parseInt(eventLogs.args.idOrder.toString()))  === -1){
+                    this.setState({
+                        customerContract_blockchainRecordedPurchaseOrderIds: [...this.state.customerContract_blockchainRecordedPurchaseOrderIds,
+                            parseInt(eventLogs.args.idOrder.toString())
+                        ]
+                    });
+                }
             }
         });
     }
@@ -191,6 +193,7 @@ class SuppliersClient extends Component {
                                     </Tab>
                                     <Tab eventKey={2} title="Process Order(s)">
                                         <h4>Order details</h4>
+                                        <small>Click on Order to process/complete it!</small>
                                         <Table striped bordered condensed hover>
                                             <thead>
                                                 <tr>
