@@ -236,7 +236,6 @@ class SuppliersClient extends Component {
                                                 </thead>
                                                 <tbody>
                                                     {this.state.supplierContract_blockchainRecordedPurchaseOrderServices.map(po => {
-                                                        console.log(po);
                                                     return (<tr>
                                                         <td>
                                                         {po.idOrder}

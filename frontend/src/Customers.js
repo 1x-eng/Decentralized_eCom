@@ -26,6 +26,11 @@ class CustomersClient extends Component {
             toBlock: 'latest'
         });
 
+        this.supplierContract_processAnOrderEvents = supplierContract.ProcessAnOrder({}, {
+            fromBlock: 0,
+            toBlock: 'latest'
+        });
+
         this.customerContract_OrderRaisedOrUpdatedEvents = customerContract.OrderRaisedOrUpdated({}, {
             fromBlock: 0,
             toBlock: 'latest'
@@ -78,6 +83,17 @@ class CustomersClient extends Component {
                 });
             }
         });
+
+        this.supplierContract_processAnOrderEvents.watch((err, eventLogs) => {
+            if (err) {
+                console.error('[Event Listener Error]', err);
+            } else {
+                console.log('[Event Logs]', eventLogs);
+                if (eventLogs.args.status){
+                    this.customerContract_recieveItem(parseInt(eventLogs.args.idOrder.toString()));
+                }
+            }
+        })
     }
 
     supplierContract_getItem(idItem) {
@@ -185,6 +201,7 @@ class CustomersClient extends Component {
                                                 <tbody>
                                                     {this.state.customerContract_blockchainRecordedPurchaseOrderIds.map(orderId => {
                                                     const orderDetails = this.customerContract_getOrderDetails(orderId);
+
                                                     return (<tr onClick={() => this.supplierContract_processOrder(orderId, 1)}>
                                                         <td>
                                                         {orderId}
