@@ -11,7 +11,7 @@ ETHEReact is a full stack DApp; demonstrating e-commerce capabilities without an
 # Setup
 - Install latest version of [NodeJS](https://nodejs.org/en/)
 - Install `truffle` globally using `npm install -g truffle` 
-- Install Ethereum RPC globally using `npm install -g ethereum-testrpc` 
+- Install Ethereum RPC globally using `npm install -g ethereumjs-testrpc` 
 - Clone this Repo using `git clone https://github.com/PruthviKumarBK/Decentralized_eCom.git` 
 - `cd Decentralized_eCom` 
 - Open a terminal/cmd and navigate to current working directory and cd into 'backend'. `cd backend`, instantiate testrpc server using `testrpc -l 9000000000 -p 8484`. ('-l' indicates available gas limit for the network. In test networks, this is at developer's discretion. '-p' indicate the port). You should now have Ethereum running on your local development machine. Leave that running!
