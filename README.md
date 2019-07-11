@@ -3,7 +3,7 @@
 ![alt text](https://github.com/PruthviKumarBK/Decentralized_eCom/blob/master/ETHEReact.png)
 
 # Description
-ETHEReact is a full stack DApp; demonstrating e-commerce capabilities without any database powering the backend but the EVM standing tall! This is not a product in iteself but the idea for aspiring blockchain enthusiasts to uncover the potential; end-to-end!
+ETHEReact is a full stack DApp; demonstrating e-commerce capabilities without any database powering the backend but the EVM standing tall! This is not a product in iteself but an idea for aspiring blockchain enthusiasts to uncover the potential; end-to-end!
 
 - This app is comprised of Truffle powered `testrpc` (which is also called `ganache`) facilitating local development.
 - Web3 bridges Ethereum to ReactJS!
