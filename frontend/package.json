@@ -7,7 +7,7 @@
     "react-bootstrap": "2.1.2",
     "react-dom": "16.14.0",
     "react-scripts": "1.1.5",
-    "web3": "0.20.7"
+    "web3": "1.7.0"
   },
   "scripts": {
     "start": "react-scripts start",
